@@ -1,0 +1,1195 @@
+
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<title>Grille par Zones</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f4f7fa; padding: 20px; }
+  h2 { background: #264b96; color: white; padding: 8px; border-radius: 6px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+  th { background: #d8e4ff; }
+  input[type="text"] { width: 100px; }
+</style>
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f8fafc;
+  margin: 0;
+  padding: 20px;
+  font-size: 15px;
+  color: #222;
+}
+h1, h2 {
+  color: #264b96;
+}
+table {
+  margin: 15px auto;
+  width: 98%;
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  text-align: center;
+}
+th {
+  background-color: #e9effa;
+}
+input[type="text"] {
+  width: 95%;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+button {
+  font-size: 15px;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 6px;
+  border: none;
+  background-color: #264b96;
+  color: white;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #1d3875;
+}
+label {
+  font-weight: normal;
+}
+</style>
+<style>
+h2 {
+  color: #556b2f !important;
+}
+</style>
+<style>
+.zone-title {
+  color: white !important;
+}
+</style>
+</head>
+<body>
+<div style="display: flex; align-items: center; background: #f9fafc; padding: 15px 20px; border-bottom: 2px solid #ccc; margin-bottom: 20px;">
+<img alt="Logo Dynacité" src="https://upload.wikimedia.org/wikipedia/fr/4/47/Logo_Dynacit%C3%A9.svg" style="height: 50px; margin-right: 20px;"/>
+<h1 style="margin: 0; font-size: 26px; color: #264b96;">Fiche Qualité - Évaluation sur site</h1>
+</div>
+
+<div style="text-align:center; margin-bottom:20px;">
+  <label for="nomTitulaire" style="font-size:18px; font-weight:bold;">👤 Saisissez ou sélectionnez un titulaire :</label><br/><br/>
+  <input type="text" id="nouveauNomTitulaire" placeholder="Entrer un nouveau nom" style="padding:8px; font-size:16px; width:250px;" />
+  <button onclick="ajouterNomTitulaireDepuisChamp()">➕ Ajouter ce Nom</button>
+  <br/><br/>
+  <select id="nomTitulaire" style="padding:8px; font-size:16px; width:250px;">
+    <option value="">-- Choisir un nom --</option>
+  </select><br/><br/><button onclick="supprimerNomTitulaire()">🗑 Supprimer ce Nom</button>
+</div>
+
+<div style="text-align:center; margin-top:10px; margin-bottom:20px;">
+<label for="ficheDate">📅 Date :</label>
+<input id="ficheDate" style="margin-right:20px; padding:6px;" type="date"/>
+<label for="ficheHeure">⏰ Heure :</label>
+<input id="ficheHeure" style="margin-right:20px; padding:6px;" type="time"/>
+<label for="ficheAdresse">📍 Adresse :</label>
+<input id="ficheAdresse" placeholder="Adresse du site" style="padding:6px; width:250px;" type="text"/>
+
+<label for="ficheInspecteur">🧑‍💼 Inspecteur :</label>
+<input id="ficheInspecteur" placeholder="Nom de l'inspecteur" style="padding:6px; width:250px;" type="text"/>
+
+</div>
+<div id="recapInfos" style="text-align:center; font-size:16px; margin-bottom:20px; background:#eef3ff; padding:10px; border-radius:8px;">
+<strong>📝 Inspection :</strong><br/>
+  👤 Titulaire : <span id="recapNom">-</span><br/>
+  📅 Date : <span id="recapDate">-</span> | ⏰ Heure : <span id="recapHeure">-</span><br/>
+  📍 Adresse : <span id="recapAdresse">-</span><br/>🧑‍💼 Inspecteur : <span id="recapInspecteur">-</span>
+</div>
+<div style="text-align:center; margin-bottom:20px;">
+<button onclick="window.print()" style="padding:10px 20px; font-size:16px; background:#007bff; color:white; border:none; border-radius:6px;">
+    🖨 Imprimer la fiche
+  </button>
+</div>
+<div style="text-align:center; font-size:20px; font-weight:bold; margin-bottom:20px;">
+  📋 Fiche en cours pour : <span id="titreTitulaire" style="color:#264b96;">(aucun nom sélectionné)</span>
+</div>
+<h2 style="color:white; background:#2c3e50; padding:10px; border-radius:5px; text-align:center;">🧼 Grille d'évaluation du nettoyage</h2><form>
+<table>
+<tr>
+<td colspan="5" style="background-color:#2c3e50; color:white; font-weight:bold;
+        padding:12px; font-size:18px; text-align:center; border: 2px solid #1a1a1a;">
+            🏠 Hall d'entrée
+        </td>
+</tr>
+<tr>
+<th>Zone</th>
+<th>Critère</th>
+<th>Question</th>
+<th>OUI/NON</th>
+<th>Commentaires</th>
+</tr>
+<tr>
+<td>Hall d'entrée</td>
+<td>👃 Odeur</td>
+<td>L'odeur est-elle désagréable ?</td>
+<td>
+<select class="choice-select" name="q1">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c1"></textarea></td>
+</tr>
+<tr>
+<td>Hall d'entrée</td>
+<td>🕸️ Plafond</td>
+<td>Le plafond présente-t-il des toiles d'araignées ?</td>
+<td>
+<select class="choice-select" name="q2">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c2"></textarea></td>
+</tr>
+<tr>
+<td>Hall d'entrée</td>
+<td>📬 Boîtes aux lettres</td>
+<td>Les boîtes aux lettres présentent-elles des salissures ?</td>
+<td>
+<select class="choice-select" name="q3">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c3"></textarea></td>
+</tr>
+<tr>
+<td>Hall d'entrée</td>
+<td>🗑️ Corbeille(s)</td>
+<td>Les corbeilles sont-elles vidées ?</td>
+<td>
+<select class="choice-select" name="q4">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c4"></textarea></td>
+</tr>
+<tr>
+<td>Hall d'entrée</td>
+<td>🪞 Vitres et glaces</td>
+<td>Les vitres / glaces présentent-elles des traces ?</td>
+<td>
+<select class="choice-select" name="q5">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c5"></textarea></td>
+</tr>
+<tr>
+<td>Hall d'entrée</td>
+<td>🧱 Murs</td>
+<td>Les murs présentent-ils des salissures ou tags ?</td>
+<td>
+<select class="choice-select" name="q6">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c6"></textarea></td>
+</tr>
+<tr>
+<td>Hall d'entrée</td>
+<td>🧽 Sol / plinthes</td>
+<td>Le sol / plinthes présente-t-il des traces de lavage ?</td>
+<td>
+<select class="choice-select" name="q7">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c7"></textarea></td>
+</tr>
+<tr>
+<td>Hall d'entrée</td>
+<td>🧽 Sol / plinthes</td>
+<td>Le sol / plinthes est-il encrassé ?</td>
+<td>
+<select class="choice-select" name="q8">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c8"></textarea></td>
+</tr>
+<tr>
+<td>Hall d'entrée</td>
+<td>🧽 Sol / plinthes</td>
+<td>Le sol / plinthes présente-t-il des salissures ?</td>
+<td>
+<select class="choice-select" name="q9">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c9"></textarea></td>
+</tr>
+<tr>
+<td colspan="5" style="background-color:#2c3e50; color:white; font-weight:bold;
+        padding:12px; font-size:18px; text-align:center; border: 2px solid #1a1a1a;">
+            📋 Cabine d'ascenseur
+        </td>
+</tr>
+<tr>
+<th>Zone</th>
+<th>Critère</th>
+<th>Question</th>
+<th>OUI/NON</th>
+<th>Commentaires</th>
+</tr>
+<tr>
+<td>Cabine d'ascenseur</td>
+<td>👃 Odeur</td>
+<td>L'odeur est-elle désagréable ?</td>
+<td>
+<select class="choice-select" name="q10">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c10"></textarea></td>
+</tr>
+<tr>
+<td>Cabine d'ascenseur</td>
+<td>🧱 Murs</td>
+<td>Les murs présentent-ils des salissures / tags ?</td>
+<td>
+<select class="choice-select" name="q11">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c11"></textarea></td>
+</tr>
+<tr>
+<td>Cabine d'ascenseur</td>
+<td>🧽 Sol</td>
+<td>Le sol présente-t-il des salissures ou poussière ?</td>
+<td>
+<select class="choice-select" name="q12">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c12"></textarea></td>
+</tr>
+<tr>
+<td>Cabine d'ascenseur</td>
+<td>🛤️ Rail</td>
+<td>Le rail est-il encrassé ?</td>
+<td>
+<select class="choice-select" name="q13">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c13"></textarea></td>
+</tr>
+<tr>
+<td>Cabine d'ascenseur</td>
+<td>🪞 Miroir</td>
+<td>Le miroir présente-t-il des traces ou salissures ?</td>
+<td>
+<select class="choice-select" name="q14">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c14"></textarea></td>
+</tr>
+<tr>
+<td colspan="5" style="background-color:#2c3e50; color:white; font-weight:bold;
+        padding:12px; font-size:18px; text-align:center; border: 2px solid #1a1a1a;">
+            📋 Escaliers
+        </td>
+</tr>
+<tr>
+<th>Zone</th>
+<th>Critère</th>
+<th>Question</th>
+<th>OUI/NON</th>
+<th>Commentaires</th>
+</tr>
+<tr>
+<td>Escaliers</td>
+<td>👃 Odeur</td>
+<td>L'odeur est-elle désagréable ?</td>
+<td>
+<select class="choice-select" name="q15">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c15"></textarea></td>
+</tr>
+<tr>
+<td>Escaliers</td>
+<td>🕸️ Plafond</td>
+<td>Le plafond présente-t-il des toiles d'araignées ?</td>
+<td>
+<select class="choice-select" name="q16">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c16"></textarea></td>
+</tr>
+<tr>
+<td>Escaliers</td>
+<td>🪜 Main courante</td>
+<td>La main courante est-elle propre ?</td>
+<td>
+<select class="choice-select" name="q17">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c17"></textarea></td>
+</tr>
+<tr>
+<td>Escaliers</td>
+<td>🧽 Sol / plinthes</td>
+<td>Le sol présente-t-il des traces de lavage ?</td>
+<td>
+<select class="choice-select" name="q18">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c18"></textarea></td>
+</tr>
+<tr>
+<td>Escaliers</td>
+<td>🧽 Sol / plinthes</td>
+<td>Le sol est-il encrassé ?</td>
+<td>
+<select class="choice-select" name="q19">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c19"></textarea></td>
+</tr>
+<tr>
+<td>Escaliers</td>
+<td>🧽 Sol / plinthes</td>
+<td>Le sol présente-t-il des salissures / poussière ?</td>
+<td>
+<select class="choice-select" name="q20">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c20"></textarea></td>
+</tr>
+<tr>
+<td>Escaliers</td>
+<td>🧱 Murs</td>
+<td>Les murs présentent-ils des salissures / tags ?</td>
+<td>
+<select class="choice-select" name="q21">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c21"></textarea></td>
+</tr>
+<tr>
+<td colspan="5" style="background-color:#2c3e50; color:white; font-weight:bold;
+        padding:12px; font-size:18px; text-align:center; border: 2px solid #1a1a1a;">
+            📶 Paliers d'étage
+        </td>
+</tr>
+<tr>
+<th>Zone</th>
+<th>Critère</th>
+<th>Question</th>
+<th>OUI/NON</th>
+<th>Commentaires</th>
+</tr>
+<tr>
+<td>Paliers d'étage</td>
+<td>👃 Odeur</td>
+<td>L'odeur est-elle désagréable ?</td>
+<td>
+<select class="choice-select" name="q22">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c22"></textarea></td>
+</tr>
+<tr>
+<td>Paliers d'étage</td>
+<td>🕸️ Plafond</td>
+<td>Le plafond présente-t-il des toiles d'araignées ?</td>
+<td>
+<select class="choice-select" name="q23">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c23"></textarea></td>
+</tr>
+<tr>
+<td>Paliers d'étage</td>
+<td>🧽 Sol / plinthes</td>
+<td>Le sol présente-t-il des traces de lavage ?</td>
+<td>
+<select class="choice-select" name="q24">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c24"></textarea></td>
+</tr>
+<tr>
+<td>Paliers d'étage</td>
+<td>🧽 Sol / plinthes</td>
+<td>Le sol est-il encrassé ?</td>
+<td>
+<select class="choice-select" name="q25">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c25"></textarea></td>
+</tr>
+<tr>
+<td>Paliers d'étage</td>
+<td>🧽 Sol / plinthes</td>
+<td>Le sol présente-t-il des salissures / poussière ?</td>
+<td>
+<select class="choice-select" name="q26">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c26"></textarea></td>
+</tr>
+<tr>
+<td>Paliers d'étage</td>
+<td>🧱 Murs</td>
+<td>Les murs présentent-ils des salissures / tags ?</td>
+<td>
+<select class="choice-select" name="q27">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c27"></textarea></td>
+</tr>
+<tr>
+<td colspan="5" style="background-color:#2c3e50; color:white; font-weight:bold;
+        padding:12px; font-size:18px; text-align:center; border: 2px solid #1a1a1a;">
+            🚲 Locaux vélos
+        </td>
+</tr>
+<tr>
+<th>Zone</th>
+<th>Critère</th>
+<th>Question</th>
+<th>OUI/NON</th>
+<th>Commentaires</th>
+</tr>
+<tr>
+<td>Locaux vélos</td>
+<td>👃 Odeur</td>
+<td>L'odeur est-elle désagréable ?</td>
+<td>
+<select class="choice-select" name="q28">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c28"></textarea></td>
+</tr>
+<tr>
+<td>Locaux vélos</td>
+<td>🧽 Sol</td>
+<td>Le sol est-il encrassé ou présente-t-il des détritus ?</td>
+<td>
+<select class="choice-select" name="q29">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c29"></textarea></td>
+</tr>
+<tr>
+<td colspan="5" style="background-color:#2c3e50; color:white; font-weight:bold;
+        padding:12px; font-size:18px; text-align:center; border: 2px solid #1a1a1a;">
+            📋 Sous-sols
+        </td>
+</tr>
+<tr>
+<th>Zone</th>
+<th>Critère</th>
+<th>Question</th>
+<th>OUI/NON</th>
+<th>Commentaires</th>
+</tr>
+<tr>
+<td>Sous-sols</td>
+<td>🧽 Sol</td>
+<td>Le sol est-il encrassé ou présente-t-il des détritus ?</td>
+<td>
+<select class="choice-select" name="q30">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c30"></textarea></td>
+</tr>
+<tr>
+<td colspan="5" style="background-color:#2c3e50; color:white; font-weight:bold;
+        padding:12px; font-size:18px; text-align:center; border: 2px solid #1a1a1a;">
+            📋 Locaux ordures ménagères
+        </td>
+</tr>
+<tr>
+<th>Zone</th>
+<th>Critère</th>
+<th>Question</th>
+<th>OUI/NON</th>
+<th>Commentaires</th>
+</tr>
+<tr>
+<td>Locaux ordures ménagères</td>
+<td>👃 Odeur</td>
+<td>L'odeur est-elle désagréable ?</td>
+<td>
+<select class="choice-select" name="q31">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c31"></textarea></td>
+</tr>
+<tr>
+<td>Locaux ordures ménagères</td>
+<td>🧽 Sol</td>
+<td>Le sol présente-t-il des détritus ou des salissures ?</td>
+<td>
+<select class="choice-select" name="q32">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c32"></textarea></td>
+</tr>
+<tr>
+<td>Locaux ordures ménagères</td>
+<td>▪️ Siphon</td>
+<td>Le siphon est-il obstrué ?</td>
+<td>
+<select class="choice-select" name="q33">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c33"></textarea></td>
+</tr>
+<tr>
+<td>Locaux ordures ménagères</td>
+<td>🚮 Conteneurs</td>
+<td>Les conteneurs sont-ils en mauvais état ?</td>
+<td>
+<select class="choice-select" name="q34">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c34"></textarea></td>
+</tr>
+<tr>
+<td>Locaux ordures ménagères</td>
+<td>🚮 Collerette</td>
+<td>La collerette des conteneurs est-elle encrassée ?</td>
+<td>
+<select class="choice-select" name="q35">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c35"></textarea></td>
+</tr>
+<tr>
+<td>Locaux ordures ménagères</td>
+<td>🚮 Conteneurs (int./ext.)</td>
+<td>L'intérieur et l'extérieur des conteneurs sont-ils encrassés ?</td>
+<td>
+<select class="choice-select" name="q36">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c36"></textarea></td>
+</tr>
+<tr>
+<td colspan="5" style="background-color:#2c3e50; color:white; font-weight:bold;
+        padding:12px; font-size:18px; text-align:center; border: 2px solid #1a1a1a;">
+            🏞️ Abords immédiat
+        </td>
+</tr>
+<tr>
+<th>Zone</th>
+<th>Critère</th>
+<th>Question</th>
+<th>OUI/NON</th>
+<th>Commentaires</th>
+</tr>
+<tr>
+<td>Abords immédiat</td>
+<td>▪️ Papiers</td>
+<td>Les papiers sont-ils ramassés aux abords ?</td>
+<td>
+<select class="choice-select" name="q37">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c37"></textarea></td>
+</tr>
+<tr>
+<td>Abords immédiat</td>
+<td>🗑️ Détritus divers</td>
+<td>Les détritus sont-ils ramassés aux abords ?</td>
+<td>
+<select class="choice-select" name="q38">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c38"></textarea></td>
+</tr>
+<tr>
+<td>Abords immédiat</td>
+<td>🎨 Façade</td>
+<td>La façade présente-t-elle des tags ?</td>
+<td>
+<select class="choice-select" name="q39">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c39"></textarea></td>
+</tr>
+<tr>
+<td>Abords immédiat</td>
+<td>🕳️ Grilles EP</td>
+<td>Les grilles EP sont-elles obstruées ?</td>
+<td>
+<select class="choice-select" name="q40">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c40"></textarea></td>
+</tr>
+<tr>
+<td colspan="5" style="background-color:#2c3e50; color:white; font-weight:bold;
+    padding:12px; font-size:18px; text-align:center; border: 2px solid #1a1a1a;">
+        🏢 Local CE
+    </td>
+</tr>
+<tr>
+<th>Zone</th>
+<th>Critère</th>
+<th>Question</th>
+<th>OUI/NON</th>
+<th>Commentaires</th>
+</tr>
+<tr>
+<td>Local CE</td>
+<td>🏠 Local rangé ?</td>
+<td>Le local est-il bien rangé ?</td>
+<td>
+<select class="choice-select" name="q41">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c41"></textarea></td>
+</tr>
+<tr>
+<td>Local CE</td>
+<td>🚰 Timbre office ou vidoir propre ?</td>
+<td>Le timbre office ou vidoir est-il propre ?</td>
+<td>
+<select class="choice-select" name="q42">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c42"></textarea></td>
+</tr>
+<tr>
+<td>Local CE</td>
+<td>🧰 Matériel rangé</td>
+<td>Le matériel est-il rangé ?</td>
+<td>
+<select class="choice-select" name="q43">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c43"></textarea></td>
+</tr>
+<tr>
+<td>Local CE</td>
+<td>📋 Tableau d'affichage à jour ?</td>
+<td>Le tableau d'affichage est-il à jour ?</td>
+<td>
+<select class="choice-select" name="q44">
+<option value=""></option>
+<option value="oui">✅ Oui</option>
+<option value="non">❌ Non</option>
+</select>
+</td>
+<td><textarea name="c44"></textarea></td>
+</tr>
+</table>
+
+</form><div style="text-align:center; margin-top:20px;">
+</div>
+<div style="text-align:center; margin-top:10px;">
+</div>
+<script>
+function restaurerFiche() {
+  const data = JSON.parse(localStorage.getItem("ficheQualite") || "[]");
+  const rows = document.querySelectorAll("table tr");
+  data.forEach(saved => {
+    rows.forEach(row => {
+      const cells = row.querySelectorAll("td");
+      if (cells.length >= 5) {
+        const critere = cells[0].innerText.trim();
+        if (critere === saved.critere) {
+          const ouiInput = cells[1].querySelector("input[type='radio']");
+          const nonInput = cells[2].querySelector("input[type='radio']");
+          if (ouiInput) ouiInput.checked = saved.oui;
+          if (nonInput) nonInput.checked = saved.non;
+          const commentInput = cells[3].querySelector("input[type='text']");
+          if (commentInput) commentInput.value = saved.commentaire;
+        }
+      }
+    });
+  });
+  alert("🔄 Fiche restaurée !");
+}
+</script>
+<div style="text-align:center; margin-top:10px;">
+</div>
+<script>
+function resetFiche() {
+  if (!confirm("❗Êtes-vous sûr de vouloir tout effacer ?")) return;
+  const inputs = document.querySelectorAll("input[type='radio'], input[type='text']");
+  inputs.forEach(input => {
+    if (input.type === "radio") input.checked = false;
+    if (input.type === "text") input.value = "";
+  });
+  localStorage.removeItem("ficheQualite");
+  alert("🗑 Fiche vidée et localStorage effacé.");
+}
+</script>
+<script>
+function restaurerFichePour(nom) {
+  document.getElementById("titreTitulaire").textContent = nom;
+  const fiches = JSON.parse(localStorage.getItem("fichesParTitulaire") || "{}");
+  const data = fiches[nom] || [];
+
+  const rows = document.querySelectorAll("table tr");
+  data.forEach(saved => {
+    rows.forEach(row => {
+      const cells = row.querySelectorAll("td");
+      if (cells.length >= 5) {
+        const critere = cells[0].innerText.trim();
+        if (critere === saved.critere) {
+          const ouiInput = cells[1].querySelector("input[type='radio']");
+          const nonInput = cells[2].querySelector("input[type='radio']");
+          if (ouiInput) ouiInput.checked = saved.oui;
+          if (nonInput) nonInput.checked = saved.non;
+          const commentInput = cells[3].querySelector("input[type='text']");
+          if (commentInput) commentInput.value = saved.commentaire;
+        }
+      }
+    });
+  });
+}
+
+window.onload = () => {
+  const fiches = JSON.parse(localStorage.getItem("fichesParTitulaire") || "{}");
+  const select = document.getElementById("nomTitulaire");
+  Object.keys(fiches).forEach(nom => {
+    const opt = document.createElement("option");
+    opt.value = nom;
+    opt.textContent = nom;
+    select.appendChild(opt);
+  });
+  select.addEventListener("change", () => {
+    const nom = select.value;
+    if (nom) restaurerFichePour(nom);
+  });
+};
+
+function getTitulaire() {
+  return document.getElementById("nomTitulaire")?.value || "Sans nom";
+}
+</script>
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+  const now = new Date();
+  const dateEl = document.getElementById("ficheDate");
+  const heureEl = document.getElementById("ficheHeure");
+  if (dateEl && !dateEl.value) {
+    dateEl.value = now.toISOString().split("T")[0];
+  }
+  if (heureEl && !heureEl.value) {
+    const heures = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    heureEl.value = `${heures}:${minutes}`;
+  }
+});
+</script>
+<script>
+function mettreAJourRecap() {
+  document.getElementById("recapNom").textContent = document.getElementById("nomTitulaire")?.value || "-";
+  document.getElementById("recapDate").textContent = document.getElementById("ficheDate")?.value || "-";
+  document.getElementById("recapHeure").textContent = document.getElementById("ficheHeure")?.value || "-";
+  document.getElementById("recapAdresse").textContent = document.getElementById("ficheAdresse")?.value || "-";
+  document.getElementById("recapInspecteur").textContent = document.getElementById("ficheInspecteur")?.value || "-";
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const champs = ["nomTitulaire", "ficheDate", "ficheHeure", "ficheAdresse", "ficheInspecteur"];
+  champs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener("input", mettreAJourRecap);
+    }
+  });
+  mettreAJourRecap();
+});
+</script>
+<script>
+function sauvegarderFiche() {
+  const nom = getTitulaire();
+  const date = document.getElementById("ficheDate")?.value || "";
+  const heure = document.getElementById("ficheHeure")?.value || "";
+  const adresse = document.getElementById("ficheAdresse")?.value || "";
+  const inspecteur = document.getElementById("ficheInspecteur")?.value || "";
+
+  if (!nom || nom.trim() === "") {
+    alert("❗Veuillez sélectionner un nom de titulaire.");
+    return;
+  }
+
+  const data = [];
+  let filled = false;
+  const rows = document.querySelectorAll("table tr");
+  rows.forEach(row => {
+    const cells = row.querySelectorAll("td");
+    if (cells.length >= 5) {
+      const critere = cells[0].innerText.trim();
+      const question = cells[2].innerText.trim();
+      const select = cells[3].querySelector("select");
+      const textarea = cells[4].querySelector("textarea");
+      const value = select?.value || "";
+      const commentaire = textarea?.value || "";
+
+      if (critere) {
+        data.push({
+          critere,
+          question,
+          oui: value === "oui",
+          non: value === "non",
+          commentaire
+        });
+
+        if (value || commentaire.trim() !== "") filled = true;
+      }
+    }
+  });
+
+  if (!filled) {
+    alert("⚠️ Aucun champ n'est rempli. Veuillez répondre à au moins un critère avant de sauvegarder.");
+    return;
+  }
+
+  let allFiches = JSON.parse(localStorage.getItem("fichesParTitulaire") || "{}");
+  allFiches[nom] = data;
+  localStorage.setItem("fichesParTitulaire", JSON.stringify(allFiches));
+
+  let metadata = JSON.parse(localStorage.getItem("ficheMeta") || "{}");
+  metadata[nom] = { date, heure, adresse, inspecteur };
+  localStorage.setItem("ficheMeta", JSON.stringify(metadata));
+
+  afficherHistorique();
+
+  alert("✅ Fiche sauvegardée !");
+}
+</script>
+
+<script>
+function toggleZone(id) {
+  const section = document.getElementById(id);
+  if (section.style.display === "none") {
+    section.style.display = "block";
+  } else {
+    section.style.display = "none";
+  }
+}
+</script>
+<div style="text-align:center; margin-top:30px; display:flex; flex-direction:column; gap:12px; align-items:center;"><button onclick="sauvegarderFiche()" style="padding:10px 20px; font-size:16px;">💾 Sauvegarder la fiche</button><button onclick="restaurerFiche()" style="padding:10px 20px; font-size:16px; background:#4CAF50; color:white;">📤 Restaurer la fiche</button><button onclick="resetFiche()" style="padding:10px 20px; font-size:16px; background:#d9534f; color:white;">🗑 Réinitialiser la fiche</button></div>
+<div id="historiqueSection" style="margin-top: 40px; padding: 20px; background: #eef3ff; border-radius: 8px;">
+  <h2 style="text-align: center;">📂 Historique des fiches sauvegardées</h2>
+  <div id="historiqueContent" style="margin-top: 20px;"></div>
+</div>
+
+<script>
+function afficherHistorique() {
+  const historiqueDiv = document.getElementById("historiqueContent");
+  const fiches = JSON.parse(localStorage.getItem("fichesParTitulaire") || "{}");
+  const meta = JSON.parse(localStorage.getItem("ficheMeta") || "{}");
+
+  if (Object.keys(fiches).length === 0) {
+    historiqueDiv.innerHTML = "<p>Aucune fiche sauvegardée.</p>";
+    return;
+  }
+
+  let html = "<table style='width:100%; border-collapse:collapse;'><tr style='background:#d8e4ff;'><th>👤 Titulaire</th><th>📅 Date</th><th>⏰ Heure</th><th>📍 Adresse</th><th>🔄 Restaurer</th><th>🗑 Supprimer</th><th>📄 PDF</th></tr>";
+
+  Object.keys(fiches).forEach(nom => {
+    const { date, heure, adresse } = meta[nom] || { date: "-", heure: "-", adresse: "-" };
+    html += `<tr>
+      <td>${nom}</td><td>${date}</td><td>${heure}</td><td>${adresse}</td><td><button onclick=\"restaurerFichePour\('${nom}'\)\">📤 Restaurer</button></td><td><button onclick=\"supprimerFiche('${nom}')\">🗑 Supprimer</button></td><td><button onclick=\"telechargerPDF('${nom}')\">📄 PDF</button></td>
+    </tr>`;
+  });
+
+  html += "</table>";
+  historiqueDiv.innerHTML = html;
+}
+
+window.addEventListener("DOMContentLoaded", afficherHistorique);
+</script>
+
+<script>
+function ajouterNomTitulaire() {
+  const nom = prompt("🆕 Entrez le nom du nouveau titulaire :");
+  if (!nom || nom.trim() === "") {
+    alert("⚠️ Nom invalide.");
+    return;
+  }
+
+  const select = document.getElementById("nomTitulaire");
+
+  // Vérifie si le nom existe déjà
+  for (let option of select.options) {
+    if (option.value === nom) {
+      alert("⚠️ Ce nom existe déjà.");
+      select.value = nom;
+      mettreAJourRecap();
+      return;
+    }
+  }
+
+  const opt = document.createElement("option");
+  opt.value = nom;
+  opt.textContent = nom;
+  select.appendChild(opt);
+  select.value = nom;
+  document.getElementById("titreTitulaire").textContent = nom;
+  mettreAJourRecap();
+
+  // Sauvegarder dans localStorage
+  let noms = JSON.parse(localStorage.getItem("listeNomsTitulaire") || "[]");
+  if (!noms.includes(nom)) {
+    noms.push(nom);
+    localStorage.setItem("listeNomsTitulaire", JSON.stringify(noms));
+  }
+}
+
+// Charger les noms sauvegardés au démarrage
+window.addEventListener("DOMContentLoaded", () => {
+  const savedNoms = JSON.parse(localStorage.getItem("listeNomsTitulaire") || "[]");
+  const select = document.getElementById("nomTitulaire");
+  savedNoms.forEach(nom => {
+    const exists = Array.from(select.options).some(opt => opt.value === nom);
+    if (!exists) {
+      const opt = document.createElement("option");
+      opt.value = nom;
+      opt.textContent = nom;
+      select.appendChild(opt);
+    }
+  });
+});
+</script>
+
+<script>
+function ajouterNomTitulaireDepuisChamp() {
+  const input = document.getElementById("nouveauNomTitulaire");
+  const nom = input.value.trim();
+  if (!nom) {
+    alert("⚠️ Veuillez entrer un nom.");
+    return;
+  }
+
+  const select = document.getElementById("nomTitulaire");
+
+  for (let option of select.options) {
+    if (option.value === nom) {
+      alert("⚠️ Ce nom existe déjà.");
+      select.value = nom;
+      mettreAJourRecap();
+      return;
+    }
+  }
+
+  const opt = document.createElement("option");
+  opt.value = nom;
+  opt.textContent = nom;
+  select.appendChild(opt);
+  select.value = nom;
+  document.getElementById("titreTitulaire").textContent = nom;
+  mettreAJourRecap();
+
+  // Ajout dans localStorage
+  let noms = JSON.parse(localStorage.getItem("listeNomsTitulaire") || "[]");
+  if (!noms.includes(nom)) {
+    noms.push(nom);
+    localStorage.setItem("listeNomsTitulaire", JSON.stringify(noms));
+  }
+
+  input.value = ""; // vider le champ
+}
+</script>
+
+<script>
+function supprimerNomTitulaire() {
+  const select = document.getElementById("nomTitulaire");
+  const nom = select.value;
+  if (!nom || nom === "") {
+    alert("❗Veuillez sélectionner un nom à supprimer.");
+    return;
+  }
+  if (!confirm(`❌ Supprimer "${nom}" de la liste ?`)) return;
+
+  // Supprimer du select
+  for (let i = 0; i < select.options.length; i++) {
+    if (select.options[i].value === nom) {
+      select.remove(i);
+      break;
+    }
+  }
+
+  // Supprimer du localStorage
+  let noms = JSON.parse(localStorage.getItem("listeNomsTitulaire") || "[]");
+  noms = noms.filter(n => n !== nom);
+  localStorage.setItem("listeNomsTitulaire", JSON.stringify(noms));
+
+  // Nettoyage
+  select.value = "";
+  document.getElementById("titreTitulaire").textContent = "(aucun nom sélectionné)";
+  mettreAJourRecap();
+}
+</script>
+
+<script>
+function supprimerFiche(nom) {
+  if (!confirm(`❌ Supprimer définitivement la fiche de "${nom}" ?`)) return;
+
+  let fiches = JSON.parse(localStorage.getItem("fichesParTitulaire") || "{}");
+  let metas = JSON.parse(localStorage.getItem("ficheMeta") || "{}");
+  delete fiches[nom];
+  delete metas[nom];
+  localStorage.setItem("fichesParTitulaire", JSON.stringify(fiches));
+  localStorage.setItem("ficheMeta", JSON.stringify(metas));
+  alert(`🗑 Fiche de "${nom}" supprimée.`);
+  location.reload();
+}
+
+function telechargerPDF(nom) {
+  const fiches = JSON.parse(localStorage.getItem("fichesParTitulaire") || "{}");
+  const meta = JSON.parse(localStorage.getItem("ficheMeta") || "{}")[nom];
+  const data = fiches[nom];
+
+  if (!data || !meta) {
+    alert("❗Impossible de trouver les données pour ce titulaire.");
+    return;
+  }
+
+  const now = new Date();
+  const dateGeneration = now.toLocaleDateString("fr-FR");
+
+  const win = window.open("", "_blank");
+  win.document.write("<html><head><title>Fiche PDF - " + nom + "</title>");
+  win.document.write("<style>body{font-family:sans-serif;}table{border-collapse:collapse;width:100%;margin-top:20px;}th,td{border:1px solid #ccc;padding:8px;text-align:left;}h2{background:#264b96;color:white;padding:10px;} .signature{margin-top:40px;}</style>");
+  win.document.write("</head><body>");
+  win.document.write("<h2>📝 Fiche Qualité : " + nom + "</h2>");
+  win.document.write("<p><strong>Date :</strong> " + (meta.date || "-") + " | <strong>Heure :</strong> " + (meta.heure || "-") + " | <strong>Adresse :</strong> " + (meta.adresse || "-") + "</p>");
+  win.document.write("<p><strong>Inspecteur :</strong> " + (meta.inspecteur || "-") + "</p>");
+  win.document.write("<table><tr><th>Critère</th><th>Question</th><th>Oui</th><th>Non</th><th>Commentaire</th></tr>");
+  data.forEach(item => {
+    win.document.write("<tr><td>" + item.critere + "</td><td>" + item.question + "</td><td>" + (item.oui ? "✅" : "") + "</td><td>" + (item.non ? "❌" : "") + "</td><td>" + (item.commentaire || "") + "</td></tr>");
+  });
+  win.document.write("</table>");
+  win.document.write("<div class='signature'><p><strong>Fait le :</strong> " + dateGeneration + "</p></div>");
+  win.document.write("</body></html>
+</script>
+</body></html>
